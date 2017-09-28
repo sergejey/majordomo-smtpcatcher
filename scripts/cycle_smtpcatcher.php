@@ -15,6 +15,7 @@ include_once(DIR_MODULES . 'smtpcatcher/smtpcatcher.class.php');
 
 function my_autoloader($class) {
     $class = str_replace('ZBateson\\MailMimeParser\\','',$class);
+    $class = str_replace('\\','/',$class);
     include DIR_MODULES . 'smtpcatcher/mime-parser/'.$class.'.php';
 }
 
@@ -264,21 +265,29 @@ function phpwrite($message, $socketid = 0, $priority = LOG_ALERT) {
     print date("c") . ":PID->" . getmypid() . ":SID:$socketid:" . rtrim($message) . PHP_EOL;
 }
 
-setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
 ini_set("default_socket_timeout", $config["SOCKET_TIMEOUT"]);
 $socket = stream_socket_server($config["PROTOCOL"] . "://" . $config["HOST_IP"] . ":" . $config["PORT_NUMBER"], $errno, $errstr);
 if (!$socket) {
     phpwrite("$errstr ($errno)");
 } else {
     phpwrite("Welcome Simple phpsmptserver");
-    while ($conn = stream_socket_accept($socket, -1)) {
+    while(1) {
+    setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
+    while ($conn = @stream_socket_accept($socket)) {
         setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
         $conns[] = new Client($conn);
         if (file_exists('./reboot') || IsSet($_GET['onetime']))
         {
             $db->Disconnect();
             exit;
-        }
+        }     
+    }
+        echo "Timed out\n";
+        if (file_exists('./reboot') || IsSet($_GET['onetime']))
+        {
+            $db->Disconnect();
+            exit;
+        }     
     }
     //fclose($socket);
 }
