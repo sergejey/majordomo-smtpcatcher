@@ -1,0 +1,42 @@
+
+
+ <!-- action usual -->
+ <!-- table smtp_mails search -->
+ [#if VIEW_MODE="search_smtp_mails" || VIEW_MODE=""#]
+
+ <div>
+  [ <a href="#" onClick="$('#api_settings').toggle();return false;"><#LANG_SETUP#></a> ]
+ </div>
+ <div style="display:none" id='api_settings'>
+  &nbsp;
+  <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+   <fieldset>
+    <div class="form-group">
+     <label class="control-label">
+      SMTP Port:
+      (*)
+     </label>
+     <div class="controls"><input type="text" name="api_port" value="[#API_PORT#]" class="input"></div>
+    </div>
+    <div class="form-actions">
+     <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_UPDATE#></button>
+     <input type="hidden" name="view_mode" value="update_settings">
+     <input type="hidden" name="mode" value="update">
+    </div>
+   </fieldset>
+  </form>
+ </div>
+
+  [#inc smtp_mails_search_admin.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table smtp_mails search -->
+ <!-- table smtp_mails edit -->
+ [#if VIEW_MODE="edit_smtp_mails"#]
+   [#inc smtp_mails_edit.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table smtp_mails edit -->
+ <!-- table smtp_mails view --> 
+ [#if VIEW_MODE="view_smtp_mails"#]
+   [#inc smtp_mails_view.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table smtp_mails view -->
