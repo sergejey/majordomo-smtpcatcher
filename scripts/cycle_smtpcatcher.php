@@ -176,6 +176,15 @@ class Client {
                     replyToClient($conn,'250 Okey dokey');
                     continue;
                 }
+                if ($buffer == 'auth plain' ||  $buffer == 'auth login') {
+                    replyToClient($conn,'250 Okey dokey');
+                    $buffer = fgets($conn); //skipping line
+                    replyToClient($conn,'250 Okey dokey');
+                    $buffer = fgets($conn); //skipping line
+                    replyToClient($conn,'250 Okey dokey');
+                    continue;
+                }
+
                 if (preg_match_all('/^mail from:(\s|)(<(.*)>|.*)/', $buffer, $matches, PREG_SET_ORDER)) {
                     $address = (isset($matches[0][3]) ? $matches[0][3] : $matches[0][2]);
                     if (filter_var($address, FILTER_VALIDATE_EMAIL) === FALSE)
@@ -213,7 +222,7 @@ echo "Emtpy data\n";
 }
 
 function replyToClient($conn,$msg) {
-    phpwrite('>'.$line);
+    phpwrite('>'.$msg);
     fwrite($conn, $msg . PHP_CRLF);
 }
 
