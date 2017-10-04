@@ -43,7 +43,14 @@ function parseSMTPMail($data, $recipients) {
     
     $mailto = SQLSelect("SELECT * FROM smtp_mails WHERE MAILTO LIKE '".DBSafe($to)."'");
     $total = count($mailto);
-    if ($total == 0) return;
+    if ($total == 0) {
+        $rec=array();
+        $rec['MAILTO']=$to;
+        $rec['TITLE']=$rec['MAILTO'];
+        $rec['ID']=SQLInsert('smtp_mails',$rec);
+        $mailto[]=$rec;
+        $total = 1;
+    }
 
     for($i=0;$i<$total;$i++) {
         $rec=$mailto[$i];
