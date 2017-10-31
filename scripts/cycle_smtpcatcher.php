@@ -192,7 +192,7 @@ class Client {
                     replyToClient($conn,'250 Okey dokey');
                     continue;
                 }
-				if ($buffer == 'auth login') {
+	        if ($buffer == 'auth login') {
                     replyToClient($conn,'334 Okey dokey');
                     $buffer = fgets($conn); //skipping line
                     replyToClient($conn,'334 Okey dokey');
