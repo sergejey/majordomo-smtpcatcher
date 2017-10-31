@@ -183,7 +183,8 @@ class Client {
                     replyToClient($conn,'250 Okey dokey');
                     continue;
                 }
-                if ($buffer == 'auth plain' ||  $buffer == 'auth login') {
+                
+                if ($buffer == 'auth plain' ) {
                     replyToClient($conn,'250 Okey dokey');
                     $buffer = fgets($conn); //skipping line
                     replyToClient($conn,'250 Okey dokey');
@@ -191,6 +192,14 @@ class Client {
                     replyToClient($conn,'250 Okey dokey');
                     continue;
                 }
+	        if ($buffer == 'auth login') {
+                    replyToClient($conn,'334 Okey dokey');
+                    $buffer = fgets($conn); //skipping line
+                    replyToClient($conn,'334 Okey dokey');
+                    $buffer = fgets($conn); //skipping line
+                    replyToClient($conn,'235 Okey dokey');
+                    continue;
+               }
 
                 if (preg_match_all('/^mail from:(\s|)(<(.*)>|.*)/', $buffer, $matches, PREG_SET_ORDER)) {
                     $address = (isset($matches[0][3]) ? $matches[0][3] : $matches[0][2]);
