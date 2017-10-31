@@ -34,9 +34,12 @@ function parseSMTPMail($data, $recipients) {
     $mailParser = new \ZBateson\MailMimeParser\MailMimeParser();
     $message = $mailParser ->parse($data);
 
-    $to = $message->getHeaderValue('to');
-    $from = $message->getHeaderValue('from');
-    $subject = $message->getHeaderValue('subject');
+    $to = trim($message->getHeaderValue('to'));
+    if (!$to && $recipients[0]) {
+        $to = trim($recipients[0]);
+    }
+    $from = trim($message->getHeaderValue('from'));
+    $subject = trim($message->getHeaderValue('subject'));
     $text = $message->getTextContent();
     echo "\nTO: $to\nFROM: $from\nSUBJECT: $subject\nTEXT: $text\n";
     DebMes("\nTO: $to\nFROM: $from\nSUBJECT: $subject\nTEXT: $text",'stmpcatcher');
