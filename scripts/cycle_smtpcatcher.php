@@ -107,7 +107,7 @@ function parseSMTPMail($data, $recipients) {
 
 $config = array();
 $config["PORT_NUMBER"] = $smtp_port;
-$config["HOST_IP"] = "0.0.0.0";
+$config["HOST_IP"] = getLocalIp();
 $config["PROTOCOL"] = "tcp";
 $config["SOCKET_TIMEOUT"] = 3600;
 $config["TIME_ZONE"] = "Europe/Minsk";
@@ -254,7 +254,7 @@ $socket = stream_socket_server($config["PROTOCOL"] . "://" . $config["HOST_IP"] 
 if (!$socket) {
     phpwrite("$errstr ($errno)");
 } else {
-    phpwrite("Welcome Simple phpsmptserver");
+    phpwrite("Welcome Simple phpsmptserver. You server IP - ".$config["HOST_IP"]);
     while(1) {
     setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
     while ($conn = @stream_socket_accept($socket)) {
