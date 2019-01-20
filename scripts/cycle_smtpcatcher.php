@@ -107,7 +107,7 @@ function parseSMTPMail($data, $recipients) {
 
 $config = array();
 $config["PORT_NUMBER"] = $smtp_port;
-$config["HOST_IP"] = "0.0.0.0";
+$config["HOST_IP"] = getLocalIp();
 $config["PROTOCOL"] = "tcp";
 $config["SOCKET_TIMEOUT"] = 3600;
 $config["TIME_ZONE"] = "Europe/Minsk";
@@ -251,17 +251,13 @@ function phpwrite($message, $socketid = 0, $priority = LOG_ALERT) {
 
 ini_set("default_socket_timeout", $config["SOCKET_TIMEOUT"]);
 $socket = stream_socket_server($config["PROTOCOL"] . "://" . $config["HOST_IP"] . ":" . $config["PORT_NUMBER"], $errno, $errstr);
-stream_set_blocking($socket,false);
-
 if (!$socket) {
     phpwrite("$errstr ($errno)");
 } else {
-    phpwrite("Welcome Simple phpsmptserver");
+    phpwrite("Welcome Simple phpsmptserver. You server IP - ".$config["HOST_IP"]);
     while(1) {
     setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
-    phpwrite("Wating for connection...");
-
-    while ($conn = @stream_socket_accept($socket,10)) {
+    while ($conn = @stream_socket_accept($socket)) {
         setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
         $conns[] = new Client($conn);
         if (file_exists('./reboot') || IsSet($_GET['onetime']))
