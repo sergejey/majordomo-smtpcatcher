@@ -269,7 +269,12 @@ if (!$socket) {
                 setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
                 $checked_time = time();
             }
-            if (isRebootRequired() || IsSet($_GET['onetime'])) {
+            if (function_exists('isRebootRequired')) {
+                if (isRebootRequired() || IsSet($_GET['onetime'])) {
+                    $db->Disconnect();
+                    exit;
+                }
+            } elseif (file_exists('./reboot') || IsSet($_GET['onetime'])) {
                 $db->Disconnect();
                 exit;
             }
