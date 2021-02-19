@@ -257,7 +257,7 @@ if (!$socket) {
 
     while (1) {
 
-        if ((time()-$checked_time)>10) {
+        if ((time() - $checked_time) > 10) {
             setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
             $checked_time = time();
 
@@ -265,7 +265,7 @@ if (!$socket) {
         phpwrite("Wating for connection...");
 
         while ($conn = @stream_socket_accept($socket, 10)) {
-            if ((time()-$checked_time)>10) {
+            if ((time() - $checked_time) > 10) {
                 setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
                 $checked_time = time();
             }
@@ -277,10 +277,16 @@ if (!$socket) {
         }
 
         //echo "Timed out\n";
-        if (isRebootRequired() || IsSet($_GET['onetime'])) {
+        if (function_exists('isRebootRequired')) {
+            if (isRebootRequired() || IsSet($_GET['onetime'])) {
+                $db->Disconnect();
+                exit;
+            }
+        } elseif (file_exists('./reboot') || IsSet($_GET['onetime'])) {
             $db->Disconnect();
             exit;
         }
+
     }
     //fclose($socket);
 }
